@@ -1,0 +1,7 @@
+1. Figure out why I need to select a file twice before it shows up in input text.
+*FIXED*
+1. Fix heatmap-first bug...check if heatmap object exists, if not, go ahead and marker up. Otherwise, null out heatmap overlay first. Right now I'm just trying to null it.
+2. Center map on average lat/long of points loaded.
+3. Get lat/long infobox for each marker.
+4. Load actual tweets in infobox?
+5. Active listening for tweets...this is the big step. How to connect my ruby scripts and this?
