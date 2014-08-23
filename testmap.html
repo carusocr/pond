@@ -97,6 +97,7 @@ function markPoints() {
 function moveToLocation(lat, lng){
   var center = new google.maps.LatLng(lat, lng);
   map.panTo(center);
+  map.setZoom(6);
 }
 
 function handleBrowseClick() {
@@ -115,7 +116,7 @@ function initialize() {
   var newpoints=[];
   var myLatLong = new google.maps.LatLng(6.488619,3.359756);
   var mapOptions = {
-    zoom: 5,
+    zoom: 2,
     center: new google.maps.LatLng(10,612361,-2.360596),
     mapTypeId: google.maps.MapTypeId.HYBRID
   };
