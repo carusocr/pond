@@ -1,4 +1,5 @@
 1. Fix heatmap-first bug...check if heatmap object exists, if not, go ahead and marker up. Otherwise, null out heatmap overlay first. Right now I'm just trying to null it.
+*Or, toggle buttons...show/hide for both*
 2. Center map on average lat/long of points loaded.
 *DONE, BUT ADJUST ZOOM LEVEL MORE EFFECTIVELY*
 *ADDITIONAL BUG - 0,0 POINT?*
