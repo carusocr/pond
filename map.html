@@ -23,8 +23,10 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
     <script>
 
-var map, pointarray, heatmap;
+var map, pointarray;
 var newpoints = [];
+var markers = [];
+var heatmap = "undefined";
 
 var reader = new FileReader();
 reader.onload = function(event) {
@@ -32,7 +34,7 @@ reader.onload = function(event) {
   console.log(contents);
 }
 function heatPoints() {
-//testing out marker switchoff
+  clearMarkers();
   var fileInput = document.getElementById("fileInput");
   var file = fileInput.files[0];
   var reader = new FileReader();
@@ -40,6 +42,7 @@ function heatPoints() {
   reader.onload = function(e) {
     var pointlist = reader.result.split("\n");
     // testing out calc for avg lat/long
+    // seems buggy with few points
     var tot_lat = 0;
     var tot_long = 0;
     for (var i =0; i < (pointlist.length)-1; i++) {
@@ -58,13 +61,17 @@ function heatPoints() {
     });
     heatmap.setMap(map);
     //testing out recentering of map
+    //buggy - doesn't play well with low number of points...is there a 0,0?
     moveToLocation(avg_lat, avg_long);
   }
   reader.readAsText(file);
 }
 
 function markPoints() {
-  heatmap.setMap(null);
+  if (typeof heatmap !== "undefined") {
+    heatmap.setMap(null);
+    heatmap = "undefined";
+  }
   var fileInput = document.getElementById("fileInput");
   var file = fileInput.files[0];
   var reader = new FileReader();
@@ -79,7 +86,7 @@ function markPoints() {
       newpoints.push(point);      
       tot_lat = tot_lat + parseFloat(points[0]);
       tot_long = tot_long + parseFloat(points[1]);
-      createMarker(parseFloat(points[0]),parseFloat(points[1]),'igbo');
+      createMarker(parseFloat(points[0]),parseFloat(points[1]),pointlist[i]);
     }
     var pointArray = new google.maps.MVCArray(newpoints);
     google.maps.event.trigger(map, 'resize');
@@ -97,12 +104,20 @@ function createMarker(lat, lon, html) {
     map: map,
     title: html
   });
+  markers.push(newmarker);
   newmarker['infowindow'] = new google.maps.InfoWindow({
     content: html
   });
   google.maps.event.addListener(newmarker, 'click', function() {
     this['infowindow'].open(map, this);
   });
+}
+
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+  markers.length = 0;
 }
 
 function moveToLocation(lat, lng){
@@ -112,7 +127,6 @@ function moveToLocation(lat, lng){
 }
 
 function handleBrowseClick() {
-  //selection of file seems to get the file BEFORE the one I just selected?!?
   var browseInput = document.getElementById("fileInput");
   browseInput.click();
 }
@@ -123,7 +137,6 @@ function handleChange() {
 } 
 
 function initialize() {
-  // test clear textbox
   document.getElementById("fileName").value="";
   var newpoints=[];
   var myLatLong = new google.maps.LatLng(6.488619,3.359756);
