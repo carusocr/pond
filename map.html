@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Ebola Tweets</title>
+    <title>Point Test</title>
     <style>
       html, body, #map-canvas {
         height: 100%;
@@ -22,234 +22,119 @@
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
     <script>
-// Adding 500 Data Points
-var map, pointarray, heatmap;
 
-var ebolaTweet = [
-  new google.maps.LatLng(6.552027,3.391395),
-  new google.maps.LatLng(6.538046,3.21597),
-  new google.maps.LatLng(6.537428,3.216934),
-  new google.maps.LatLng(6.42905,3.410416),
-  new google.maps.LatLng(9.114944,7.406791),
-  new google.maps.LatLng(6.506357,3.364563),
-  new google.maps.LatLng(11.82146,13.14299),
-  new google.maps.LatLng(9.030453,7.491953),
-  new google.maps.LatLng(6.197856,6.726315),
-  new google.maps.LatLng(8.470203,-13.249204),
-  new google.maps.LatLng(6.448966,3.623828),
-  new google.maps.LatLng(9.067331,7.411524),
-  new google.maps.LatLng(13.016123,5.227744),
-  new google.maps.LatLng(10.328508,9.844795),
-  new google.maps.LatLng(6.59461,3.37085),
-  new google.maps.LatLng(12.04202,8.48462),
-  new google.maps.LatLng(6.533645,3.405762),
-  new google.maps.LatLng(6.514544,3.381042),
-  new google.maps.LatLng(9.057513,7.464219),
-  new google.maps.LatLng(13.035934,5.249522),
-  new google.maps.LatLng(11.68145,10.195408),
-  new google.maps.LatLng(6.581428,3.279519),
-  new google.maps.LatLng(6.667767,3.202224),
-  new google.maps.LatLng(11.835659,13.142553),
-  new google.maps.LatLng(6.448966,3.623828),
-  new google.maps.LatLng(9.037285,7.529435),
-  new google.maps.LatLng(6.488619,3.359756),
-  new google.maps.LatLng(6.557604,3.36621),
-  new google.maps.LatLng(6.506357,3.364563),
-  new google.maps.LatLng(6.6371,3.55739),
-  new google.maps.LatLng(6.397975,-10.782629),
-  new google.maps.LatLng(6.448966,3.623828),
-  new google.maps.LatLng(6.572363,3.362705),
-  new google.maps.LatLng(9.639356,-13.610148),
-  new google.maps.LatLng(9.03937,7.48455),
-  new google.maps.LatLng(6.52128,3.3816),
-  new google.maps.LatLng(9.053486,7.479885),
-  new google.maps.LatLng(5.18135,7.70964),
-  new google.maps.LatLng(6.448966,3.623828),
-  new google.maps.LatLng(6.52128,3.3816),
-  new google.maps.LatLng(5.1807,7.7094),
-  new google.maps.LatLng(5.1807,7.7094),
-  new google.maps.LatLng(5.1807,7.7094),
-  new google.maps.LatLng(5.18102,7.70867),
-  new google.maps.LatLng(12.986902,7.624645),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(4.764181,7.019762),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(9.053486,7.479885),
-  new google.maps.LatLng(9.053486,7.479885),
-  new google.maps.LatLng(6.638284,3.399815),
-  new google.maps.LatLng(8.142607,4.74136),
-  new google.maps.LatLng(6.52128,3.3816),
-  new google.maps.LatLng(4.863795,7.055007),
-  new google.maps.LatLng(12.986902,7.624645),
-  new google.maps.LatLng(10.328508,9.844795),
-  new google.maps.LatLng(12.986902,7.624645),
-  new google.maps.LatLng(6.459951,7.496581),
-  new google.maps.LatLng(6.54879,3.25713),
-  new google.maps.LatLng(6.626005,3.336047),
-  new google.maps.LatLng(9.178331,7.213276),
-  new google.maps.LatLng(7.742558,4.435264),
-  new google.maps.LatLng(6.52128,3.3816),
-  new google.maps.LatLng(6.580211,3.335286),
-  new google.maps.LatLng(6.511815,3.389282),
-  new google.maps.LatLng(12.986902,7.624645),
-  new google.maps.LatLng(12.986902,7.624645),
-  new google.maps.LatLng(12.986902,7.624645),
-  new google.maps.LatLng(9.17556,7.219269),
-  new google.maps.LatLng(4.973389,8.337332),
-  new google.maps.LatLng(5.51988,7.04997),
-  new google.maps.LatLng(5.51988,7.04997),
-  new google.maps.LatLng(12.986902,7.624645),
-  new google.maps.LatLng(7.32875,3.89208),
-  new google.maps.LatLng(7.32875,3.89208),
-  new google.maps.LatLng(7.32875,3.89208),
-  new google.maps.LatLng(6.427967,3.449638),
-  new google.maps.LatLng(6.52128,3.3816),
-  new google.maps.LatLng(6.639135,3.332494),
-  new google.maps.LatLng(6.26254,6.20279),
-  new google.maps.LatLng(4.82674,6.997948),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(6.633097,3.367088),
-  new google.maps.LatLng(6.488619,3.359756),
-  new google.maps.LatLng(6.488619,3.359756),
-  new google.maps.LatLng(6.1333,6.76856),
-  new google.maps.LatLng(4.77541,7.01998),
-  new google.maps.LatLng(4.74528,7.04486),
-  new google.maps.LatLng(9.053486,7.479885),
-  new google.maps.LatLng(6.534347,3.361933),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(6.52128,3.3816),
-  new google.maps.LatLng(6.488619,3.359756),
-  new google.maps.LatLng(6.511815,3.389282),
-  new google.maps.LatLng(6.199275,6.732541),
-  new google.maps.LatLng(7.440449,3.898429),
-  new google.maps.LatLng(6.524616,3.323492),
-  new google.maps.LatLng(6.533645,3.405762),
-  new google.maps.LatLng(6.522048,3.378296),
-  new google.maps.LatLng(6.449567,3.470575),
-  new google.maps.LatLng(13.038532,5.225933),
-  new google.maps.LatLng(7.51901,9.062755),
-  new google.maps.LatLng(6.540501,3.320921),
-  new google.maps.LatLng(6.506357,3.364563),
-  new google.maps.LatLng(6.65228,3.32549),
-  new google.maps.LatLng(4.86261,7.06303),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(4.808714,6.99501),
-  new google.maps.LatLng(7.388389,3.93222),
-  new google.maps.LatLng(10.543134,7.461371),
-  new google.maps.LatLng(10.543134,7.461371),
-  new google.maps.LatLng(7.48141,5.7356),
-  new google.maps.LatLng(6.51554,3.3038),
-  new google.maps.LatLng(10.570459,7.460128),
-  new google.maps.LatLng(7.51901,9.062755),
-  new google.maps.LatLng(4.79019,7.03616),
-  new google.maps.LatLng(6.506357,3.364563),
-  new google.maps.LatLng(6.506357,3.364563),
-  new google.maps.LatLng(6.533645,3.405762),
-  new google.maps.LatLng(6.612302,3.331511),
-  new google.maps.LatLng(8.846847,3.756402),
-  new google.maps.LatLng(6.385071,5.61294),
-  new google.maps.LatLng(6.488619,3.359756),
-  new google.maps.LatLng(6.505916,3.356443),
-  new google.maps.LatLng(7.5019,4.57227),
-  new google.maps.LatLng(6.550671,3.362166),
-  new google.maps.LatLng(10.28215,11.17504),
-  new google.maps.LatLng(4.972973,7.939798),
-  new google.maps.LatLng(6.297029,-10.792723),
-  new google.maps.LatLng(10.558366,7.464843),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(6.476214,3.274787),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(6.522048,3.378296),
-  new google.maps.LatLng(7.464314,3.895717),
-  new google.maps.LatLng(6.778834,3.421401),
-  new google.maps.LatLng(9.112695,7.400473),
-  new google.maps.LatLng(7.51901,9.062755),
-  new google.maps.LatLng(6.514544,3.381042),
-  new google.maps.LatLng(9.034864,7.475379),
-  new google.maps.LatLng(6.623022,3.371056),
-  new google.maps.LatLng(7.372334,3.973),
-  new google.maps.LatLng(6.636313,3.376105),
-  new google.maps.LatLng(9.049267,6.569359),
-  new google.maps.LatLng(6.56986,3.37729),
-  new google.maps.LatLng(6.514544,3.381042),
-  new google.maps.LatLng(7.51901,9.062755),
-  new google.maps.LatLng(10.290923,9.833537),
-  new google.maps.LatLng(10.58386,7.465827),
-  new google.maps.LatLng(6.257686,7.106692),
-  new google.maps.LatLng(6.42279,3.41416),
-  new google.maps.LatLng(9.062755,7.51901),
-  new google.maps.LatLng(6.34807,5.608646),
-  new google.maps.LatLng(10.54843,7.451176),
-  new google.maps.LatLng(6.209734,-1.681888),
-  new google.maps.LatLng(6.488619,3.359756),
-  new google.maps.LatLng(11.983814,8.541621),
-  new google.maps.LatLng(8.977586,7.480939),
-  new google.maps.LatLng(6.741257,6.142822),
-  new google.maps.LatLng(8.987883,7.439955),
-  new google.maps.LatLng(6.522048,3.378296),
-  new google.maps.LatLng(6.516666,3.387341),
-  new google.maps.LatLng(6.448966,3.623828),
-  new google.maps.LatLng(7.51901,9.062755),
-  new google.maps.LatLng(6.514544,3.381042),
-  new google.maps.LatLng(9.061633,7.457308),
-  new google.maps.LatLng(9.061643,7.457263),
-  new google.maps.LatLng(6.469291,3.646608),
-  new google.maps.LatLng(6.514217,3.386839),
-  new google.maps.LatLng(6.517749,3.383503),
-  new google.maps.LatLng(6.511815,3.389282)
-];
+var map, pointarray, heatmap;
+var newpoints = [];
+
+var reader = new FileReader();
+reader.onload = function(event) {
+  var contents = event.target.result;
+  console.log(contents);
+}
+function heatPoints() {
+//testing out marker switchoff
+  var fileInput = document.getElementById("fileInput");
+  var file = fileInput.files[0];
+  var reader = new FileReader();
+  var newpoints = [];
+  reader.onload = function(e) {
+    var pointlist = reader.result.split("\n");
+    // testing out calc for avg lat/long
+    var tot_lat = 0;
+    var tot_long = 0;
+    for (var i =0; i < (pointlist.length)-1; i++) {
+      var points = pointlist[i].split(",");
+      var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
+      newpoints.push(point);      
+      tot_lat = tot_lat + parseFloat(points[0]);
+      tot_long = tot_long + parseFloat(points[1]);
+    }
+    var pointArray = new google.maps.MVCArray(newpoints);
+    google.maps.event.trigger(map, 'resize');
+    var avg_lat = (tot_lat / pointlist.length);
+    var avg_long = (tot_long / pointlist.length);
+    heatmap = new google.maps.visualization.HeatmapLayer({
+     data: pointArray
+    });
+    heatmap.setMap(map);
+    //testing out recentering of map
+    moveToLocation(avg_lat, avg_long);
+  }
+  reader.readAsText(file);
+}
+
+function markPoints() {
+  heatmap.setMap(null);
+  var fileInput = document.getElementById("fileInput");
+  var file = fileInput.files[0];
+  var reader = new FileReader();
+  var newpoints = [];
+  reader.onload = function(e) {
+    var pointlist = reader.result.split("\n");
+    var tot_lat = 0;
+    var tot_long = 0;
+    for (var i =0; i < (pointlist.length)-1; i++) {
+      var points = pointlist[i].split(",");
+      var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
+      newpoints.push(point);      
+      tot_lat = tot_lat + parseFloat(points[0]);
+      tot_long = tot_long + parseFloat(points[1]);
+      createMarker(parseFloat(points[0]),parseFloat(points[1]),'igbo');
+    }
+    var pointArray = new google.maps.MVCArray(newpoints);
+    google.maps.event.trigger(map, 'resize');
+    var avg_lat = (tot_lat / pointlist.length);
+    var avg_long = (tot_long / pointlist.length);
+    moveToLocation(avg_lat, avg_long);
+  }
+  reader.readAsText(file);
+}
+
+//using this to create multiple markers
+function createMarker(lat, lon, html) {
+  var newmarker = new google.maps.Marker({
+    position: new google.maps.LatLng(lat, lon),
+    map: map,
+    title: html
+  });
+  newmarker['infowindow'] = new google.maps.InfoWindow({
+    content: html
+  });
+  google.maps.event.addListener(newmarker, 'click', function() {
+    this['infowindow'].open(map, this);
+  });
+}
+
+function moveToLocation(lat, lng){
+  var center = new google.maps.LatLng(lat, lng);
+  map.panTo(center);
+  map.setZoom(6);
+}
+
+function handleBrowseClick() {
+  //selection of file seems to get the file BEFORE the one I just selected?!?
+  var browseInput = document.getElementById("fileInput");
+  browseInput.click();
+}
+function handleChange() {
+  var browseInput = document.getElementById("fileInput");
+  var ti = document.getElementById("fileName");
+  ti.value = browseInput.value;
+} 
 
 function initialize() {
+  // test clear textbox
+  document.getElementById("fileName").value="";
+  var newpoints=[];
+  var myLatLong = new google.maps.LatLng(6.488619,3.359756);
   var mapOptions = {
-    zoom: 6,
+    zoom: 2,
     center: new google.maps.LatLng(10,612361,-2.360596),
-    mapTypeId: google.maps.MapTypeId.TERRAIN
+    mapTypeId: google.maps.MapTypeId.HYBRID
   };
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
     mapOptions);
-
-  var pointArray = new google.maps.MVCArray(ebolaTweet);
-
-  heatmap = new google.maps.visualization.HeatmapLayer({
-    data: pointArray
-  });
-
-  heatmap.setMap(map);
-
-}
-
-function toggleHeatmap() {
-  heatmap.setMap(heatmap.getMap() ? null : map);
-}
-
-function changeGradient() {
-
-  var gradient = [
-    'rgba(0, 255, 255, 0)',
-    'rgba(0, 255, 255, 1)',
-    'rgba(0, 191, 255, 1)',
-    'rgba(0, 127, 255, 1)',
-    'rgba(0, 63, 255, 1)',
-    'rgba(0, 0, 255, 1)',
-    'rgba(0, 0, 223, 1)',
-    'rgba(0, 0, 191, 1)',
-    'rgba(0, 0, 159, 1)',
-    'rgba(0, 0, 127, 1)',
-    'rgba(63, 0, 91, 1)',
-    'rgba(127, 0, 63, 1)',
-    'rgba(191, 0, 31, 1)',
-    'rgba(255, 0, 0, 1)'
-  ]
-  heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
-}
-
-function changeRadius() {
-  heatmap.set('radius', heatmap.get('radius') ? null : 20);
-}
-
-function changeOpacity() {
-  heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -258,12 +143,15 @@ google.maps.event.addDomListener(window, 'load', initialize);
   </head>
 
   <body>
-    <div id="panel">
-      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-      <button onclick="changeGradient()">Change gradient</button>
-      <button onclick="changeRadius()">Change radius</button>
-      <button onclick="changeOpacity()">Change opacity</button>
-    </div>
     <div id="map-canvas"></div>
+    <div id="panel">
+    <input type="file" id="fileInput" name="load_points" style="display: none" onChange="handleChange()">
+    <input type="text" id="fileName" readonly="true">
+    <input type="button" value="Load Pointfile" id="fakeBrowse" onclick="handleBrowseClick()">
+    <button onclick="heatPoints()">Heatmap</button>
+    <button onclick="markPoints()">Markers</button>
+    <button onclick="initialize()">Reset Map</button>
+    </div>
   </body>
+</div>
 </html>
