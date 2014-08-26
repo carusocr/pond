@@ -46,7 +46,7 @@ function heatPoints() {
     var tot_lat = 0;
     var tot_long = 0;
     for (var i =0; i < (pointlist.length)-1; i++) {
-      var points = pointlist[i].split(",");
+      var points = pointlist[i].split("\t");
       var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
       newpoints.push(point);      
       tot_lat = tot_lat + parseFloat(points[0]);
@@ -81,12 +81,13 @@ function markPoints() {
     var tot_lat = 0;
     var tot_long = 0;
     for (var i =0; i < (pointlist.length)-1; i++) {
-      var points = pointlist[i].split(",");
+      var points = pointlist[i].split("\t");
       var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
+      var tweet_load = "<p>" + points[2] + "<br />" + points[3] + "</p>";
       newpoints.push(point);      
       tot_lat = tot_lat + parseFloat(points[0]);
       tot_long = tot_long + parseFloat(points[1]);
-      createMarker(parseFloat(points[0]),parseFloat(points[1]),pointlist[i]);
+      createMarker(parseFloat(points[0]),parseFloat(points[1]),tweet_load);
     }
     var pointArray = new google.maps.MVCArray(newpoints);
     google.maps.event.trigger(map, 'resize');

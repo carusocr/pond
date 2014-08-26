@@ -38,12 +38,12 @@ function heatPoints() {
   var reader = new FileReader();
   var newpoints = [];
   reader.onload = function(e) {
-    var pointlist = reader.result.split("\n");
+    var tweetlist = reader.result.split("\n");
     // testing out calc for avg lat/long
     var tot_lat = 0;
     var tot_long = 0;
-    for (var i =0; i < (pointlist.length)-1; i++) {
-      var points = pointlist[i].split(",");
+    for (var i =0; i < (tweetlist.length)-1; i++) {
+      var points = tweetlist[i].split("\t");
       var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
       newpoints.push(point);      
       tot_lat = tot_lat + parseFloat(points[0]);
@@ -51,8 +51,8 @@ function heatPoints() {
     }
     var pointArray = new google.maps.MVCArray(newpoints);
     google.maps.event.trigger(map, 'resize');
-    var avg_lat = (tot_lat / pointlist.length);
-    var avg_long = (tot_long / pointlist.length);
+    var avg_lat = (tot_lat / tweetlist.length);
+    var avg_long = (tot_long / tweetlist.length);
     heatmap = new google.maps.visualization.HeatmapLayer({
      data: pointArray
     });
@@ -70,12 +70,13 @@ function markPoints() {
   var reader = new FileReader();
   var newpoints = [];
   reader.onload = function(e) {
-    var pointlist = reader.result.split("\n");
+    var tweetlist = reader.result.split("\n");
     var tot_lat = 0;
     var tot_long = 0;
-    for (var i =0; i < (pointlist.length)-1; i++) {
-      var points = pointlist[i].split(",");
+    for (var i =0; i < (tweetlist.length)-1; i++) {
+      var points = tweetlist[i].split("\t");
       var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
+      var tweet_user = points[2];
       newpoints.push(point);      
       tot_lat = tot_lat + parseFloat(points[0]);
       tot_long = tot_long + parseFloat(points[1]);
@@ -87,8 +88,8 @@ function markPoints() {
     }
     var pointArray = new google.maps.MVCArray(newpoints);
     google.maps.event.trigger(map, 'resize');
-    var avg_lat = (tot_lat / pointlist.length);
-    var avg_long = (tot_long / pointlist.length);
+    var avg_lat = (tot_lat / tweetlist.length);
+    var avg_long = (tot_long / tweetlist.length);
     moveToLocation(avg_lat, avg_long);
   }
   reader.readAsText(file);
