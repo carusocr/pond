@@ -23,8 +23,10 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
     <script>
 
-var map, pointarray, heatmap;
+var map, pointarray;
 var newpoints = [];
+var markers = [];
+var heatmap = "undefined";
 
 var reader = new FileReader();
 reader.onload = function(event) {
@@ -32,62 +34,114 @@ reader.onload = function(event) {
   console.log(contents);
 }
 function heatPoints() {
-//testing out marker switchoff
+  clearMarkers();
   var fileInput = document.getElementById("fileInput");
   var file = fileInput.files[0];
   var reader = new FileReader();
   var newpoints = [];
   reader.onload = function(e) {
     var pointlist = reader.result.split("\n");
+    // testing out calc for avg lat/long
+    // seems buggy with few points
+    var tot_lat = 0;
+    var tot_long = 0;
     for (var i =0; i < (pointlist.length)-1; i++) {
       var points = pointlist[i].split(",");
       var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
       newpoints.push(point);      
+      tot_lat = tot_lat + parseFloat(points[0]);
+      tot_long = tot_long + parseFloat(points[1]);
     }
     var pointArray = new google.maps.MVCArray(newpoints);
     google.maps.event.trigger(map, 'resize');
+    var avg_lat = (tot_lat / pointlist.length);
+    var avg_long = (tot_long / pointlist.length);
     heatmap = new google.maps.visualization.HeatmapLayer({
      data: pointArray
     });
     heatmap.setMap(map);
+    //testing out recentering of map
+    //buggy - doesn't play well with low number of points...is there a 0,0?
+    moveToLocation(avg_lat, avg_long);
   }
   reader.readAsText(file);
 }
 
 function markPoints() {
-  heatmap.setMap(null);
+  if (typeof heatmap !== "undefined") {
+    heatmap.setMap(null);
+    heatmap = "undefined";
+  }
   var fileInput = document.getElementById("fileInput");
   var file = fileInput.files[0];
   var reader = new FileReader();
   var newpoints = [];
   reader.onload = function(e) {
     var pointlist = reader.result.split("\n");
+    var tot_lat = 0;
+    var tot_long = 0;
     for (var i =0; i < (pointlist.length)-1; i++) {
       var points = pointlist[i].split(",");
       var point = new google.maps.LatLng(parseFloat(points[0]),parseFloat(points[1]));
       newpoints.push(point);      
-      var marker = new google.maps.Marker({
-       position: point,
-       map: map,
-       title: 'testpoint'
-      });
+      tot_lat = tot_lat + parseFloat(points[0]);
+      tot_long = tot_long + parseFloat(points[1]);
+      createMarker(parseFloat(points[0]),parseFloat(points[1]),pointlist[i]);
     }
     var pointArray = new google.maps.MVCArray(newpoints);
     google.maps.event.trigger(map, 'resize');
+    var avg_lat = (tot_lat / pointlist.length);
+    var avg_long = (tot_long / pointlist.length);
+    moveToLocation(avg_lat, avg_long);
   }
   reader.readAsText(file);
 }
+
+//using this to create multiple markers
+function createMarker(lat, lon, html) {
+  var newmarker = new google.maps.Marker({
+    position: new google.maps.LatLng(lat, lon),
+    map: map,
+    title: html
+  });
+  markers.push(newmarker);
+  newmarker['infowindow'] = new google.maps.InfoWindow({
+    content: html
+  });
+  google.maps.event.addListener(newmarker, 'click', function() {
+    this['infowindow'].open(map, this);
+  });
+}
+
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+  markers.length = 0;
+}
+
+function moveToLocation(lat, lng){
+  var center = new google.maps.LatLng(lat, lng);
+  map.panTo(center);
+  map.setZoom(6);
+}
+
 function handleBrowseClick() {
   var browseInput = document.getElementById("fileInput");
   browseInput.click();
-  var fi = document.getElementById("fileName");
-  fi.value = browseInput.value;
+}
+function handleChange() {
+  var browseInput = document.getElementById("fileInput");
+  var ti = document.getElementById("fileName");
+  ti.value = browseInput.value;
 } 
 
 function initialize() {
+  document.getElementById("fileName").value="";
+  var newpoints=[];
   var myLatLong = new google.maps.LatLng(6.488619,3.359756);
   var mapOptions = {
-    zoom: 6,
+    zoom: 2,
     center: new google.maps.LatLng(10,612361,-2.360596),
     mapTypeId: google.maps.MapTypeId.HYBRID
   };
@@ -104,7 +158,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   <body>
     <div id="map-canvas"></div>
     <div id="panel">
-    <input type="file" id="fileInput" name="load_points" style="display: none">
+    <input type="file" id="fileInput" name="load_points" style="display: none" onChange="handleChange()">
     <input type="text" id="fileName" readonly="true">
     <input type="button" value="Load Pointfile" id="fakeBrowse" onclick="handleBrowseClick()">
     <button onclick="heatPoints()">Heatmap</button>
