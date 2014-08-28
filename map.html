@@ -68,7 +68,7 @@ function heatPoints() {
 }
 
 function markPoints() {
-  if (typeof heatmap !== "undefined") {
+  if (typeof heatmap === "object") {
     heatmap.setMap(null);
     heatmap = "undefined";
   }
