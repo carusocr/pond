@@ -1,0 +1,11 @@
+http://stackoverflow.com/questions/5539990/communicate-between-a-rails-app-and-a-node-js-app
+
+https://devcenter.heroku.com/articles/realtime-polyglot-app-node-ruby-mongodb-socketio
+
+https://github.com/mongolab/tractorpush-writer-ruby
+https://github.com/mongolab/tractorpush-server
+
+http://blog.teamtreehouse.com/an-introduction-to-websockets
+
+https://www.rustybrick.com/stream-twitter-on-website.html
+*looks most promising for simple start*
