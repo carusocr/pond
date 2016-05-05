@@ -1,7 +1,7 @@
 pond
 ========
 
-Tracking Twitter ripples on Google Maps. Can load a file of tweets with coordinates and map as either markers or a heatmap. Can also track live collection, specifying keywords and populating map with markers from tweets in realtime.
+Tracking Twitter ripples on Google Maps. Can load a file of tweets with coordinates and map as either markers or a heatmap. 
 
 ![pond2](https://cloud.githubusercontent.com/assets/1410310/15050579/78322cee-12a9-11e6-962a-f8069d9096f2.jpg)
 
